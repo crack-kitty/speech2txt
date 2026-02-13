@@ -18,6 +18,7 @@ class Transcriber:
         self.config = config
         self._model: Optional[WhisperModel] = None
         self._ready = threading.Event()
+        self.current_model_name: str = ""
 
     def load_model(self) -> None:
         """Load the Whisper model. Call from a background thread."""
@@ -27,9 +28,10 @@ class Transcriber:
             self.config.model_name,
             device="cpu",
             compute_type="auto",
-            cpu_threads=4,
+            cpu_threads=8,
         )
         elapsed = time.perf_counter() - t0
+        self.current_model_name = self.config.model_name
         print(f"Model loaded in {elapsed:.1f}s")
         self._ready.set()
 

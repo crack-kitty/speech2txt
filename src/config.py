@@ -19,7 +19,7 @@ class AppConfig:
     hotkey: set[str] = field(default_factory=_default_hotkey)
 
     # Whisper model
-    model_name: str = "medium.en"
+    model_name: str = "small.en"
 
     # Recording
     sample_rate: int = 16000

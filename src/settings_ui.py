@@ -8,6 +8,7 @@ import sounddevice as sd
 
 from config import AppConfig
 
+VERSION = "1.0.0"
 
 WHISPER_MODELS = ["tiny.en", "base.en", "small.en", "medium.en"]
 RECORDING_MODES = ["toggle", "push_to_talk"]
@@ -140,5 +141,11 @@ def open_settings_window(
     btn_frame.grid(row=row, column=0, columnspan=2, pady=20)
     ttk.Button(btn_frame, text="Save", command=save).pack(side="left", padx=10)
     ttk.Button(btn_frame, text="Cancel", command=root.destroy).pack(side="left", padx=10)
+    row += 1
+
+    # ── Version ───────────────────────────────────────────
+    ttk.Label(frame, text=f"v{VERSION}", foreground="gray").grid(
+        row=row, column=0, columnspan=2, sticky="e", pady=(0, 5)
+    )
 
     root.mainloop()

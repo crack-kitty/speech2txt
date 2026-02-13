@@ -11,7 +11,7 @@ import pyperclip
 pyautogui.FAILSAFE = False
 
 
-def inject_text(text: str, paste_delay: float = 0.15) -> None:
+def inject_text(text: str, paste_delay: float = 0.06) -> None:
     """Paste text into the currently focused application via Ctrl+V.
 
     Saves the clipboard, sets it to our text, simulates Ctrl+V,
@@ -27,7 +27,7 @@ def inject_text(text: str, paste_delay: float = 0.15) -> None:
         pass  # Clipboard might be empty or contain non-text
 
     pyperclip.copy(text)
-    time.sleep(0.05)  # Let clipboard settle before pasting
+    time.sleep(0.02)  # Let clipboard settle before pasting
     pyautogui.hotkey("ctrl", "v")
     time.sleep(paste_delay)
 
@@ -52,4 +52,4 @@ def send_backspaces(count: int) -> None:
     """Send multiple backspace keystrokes to delete characters."""
     for _ in range(count):
         pyautogui.press("backspace")
-        time.sleep(0.01)
+        time.sleep(0.005)

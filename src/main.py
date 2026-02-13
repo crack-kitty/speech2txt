@@ -199,7 +199,7 @@ class Speech2Txt:
         self.hotkey.start()
 
         # Reload model if it changed
-        if self.config.model_name != self.transcriber.config.model_name:
+        if self.config.model_name != self.transcriber.current_model_name:
             self.tray.set_state("disabled")
             self.transcriber = Transcriber(self.config)
             threading.Thread(
