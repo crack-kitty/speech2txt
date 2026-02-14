@@ -22,7 +22,11 @@ def inject_text(text: str) -> None:
     if not text:
         return
 
-    _keyboard.type(text)
+    # Strip newlines — Whisper sometimes adds them on pauses, and pynput
+    # would send them as Enter keystrokes (which submits in chat apps).
+    # Intentional newlines come from voice commands ("new line"), not here.
+    clean = text.replace("\r\n", " ").replace("\n", " ").replace("\r", " ")
+    _keyboard.type(clean)
 
 
 def send_key(key: str) -> None:
