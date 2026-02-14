@@ -17,7 +17,7 @@ Press **Ctrl+Shift+V** again to:
 - **Windows** (AutoHotKey is Windows-only)
 - **AutoHotKey v2.0** — download from [https://www.autohotkey.com](https://www.autohotkey.com)
 - **Discord** (desktop app)
-- A **speech-to-text application** that activates while Ctrl+Alt+Space is held down (e.g., SuperWhisper, Whisper-based tools, etc.)
+- A **speech-to-text application** that activates while Ctrl+Alt+Space is held down (e.g., Speech2Txt or similar Whisper-based tools)
 
 ## Setup
 

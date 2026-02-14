@@ -11,5 +11,6 @@ build/
 .claude/
 installer/
 inject_debug.log
+projectplan.md
 testing.md
 nul
