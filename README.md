@@ -21,17 +21,29 @@ Uses [faster-whisper](https://github.com/SYSTRAN/faster-whisper) for fully offli
 ## Requirements
 
 - **Windows 10/11**
-- **Python 3.13 or 3.14** (3.15 alpha lacks pre-built numpy wheels)
 - A microphone
+- That's it (if using the installer)
 
 ## Installation
 
+### Option 1: One-Click Installer (Recommended)
+
+Download **`Speech2Txt-Setup.exe`** from the [latest release](https://github.com/crack-kitty/speech2txt/releases) and run it. No Python or dependencies needed — everything is bundled.
+
+The installer includes:
+- Desktop shortcut (optional)
+- Start Menu entry
+- Uninstaller (Add/Remove Programs)
+
+The Whisper model (~150MB) downloads automatically on first run.
+
+### Option 2: From Source
+
+Requires **Python 3.13 or 3.14**.
+
 ```bash
-# Clone the repo
 git clone https://github.com/crack-kitty/speech2txt.git
 cd speech2txt
-
-# Run the installer (creates venv, installs deps, optional desktop shortcut)
 install.bat
 ```
 
@@ -42,21 +54,6 @@ python -m venv venv
 venv\Scripts\activate
 pip install -r requirements.txt
 ```
-
-### Dependencies
-
-| Package | Purpose |
-|---------|---------|
-| faster-whisper | Speech-to-text (Whisper via CTranslate2) |
-| sounddevice | Microphone audio capture |
-| numpy | Audio array handling |
-| pynput | Global hotkey detection |
-| pystray | System tray icon |
-| Pillow | Tray icon image generation |
-| pyperclip | Clipboard operations |
-| pyautogui | Keyboard simulation (Ctrl+V paste) |
-
-The Whisper model (~150MB for base.en) downloads automatically on first run.
 
 ## Usage
 
@@ -106,25 +103,28 @@ Right-click the tray icon and select **Settings** to configure:
 
 Settings are saved to `%APPDATA%\Speech2Txt\settings.json`.
 
-## Packaging
+## Building from Source
 
-Build a standalone .exe with PyInstaller:
+If you've forked the repo or made changes, you can build your own installer.
+
+### Standalone .exe only
 
 ```bash
+pip install pyinstaller
 build.bat
 ```
 
-The executable will be at `dist\Speech2Txt.exe`. The Whisper model downloads on first run (not bundled).
+Output: `dist\Speech2Txt.exe`
 
-### Windows Installer
+### Full Windows Installer
 
-Build a proper Windows installer (`.exe`) with desktop shortcut, Start Menu entry, and uninstaller:
+Requires [Inno Setup](https://jrsoftware.org/isdl.php) (`choco install innosetup -y`) and PyInstaller.
 
 ```bash
 build_installer.bat
 ```
 
-Requires [Inno Setup](https://jrsoftware.org/isdl.php) (`choco install innosetup -y`). The installer will be at `installer\Speech2Txt-Setup.exe`.
+Output: `installer\Speech2Txt-Setup.exe` — a self-contained installer with desktop shortcut, Start Menu entry, and uninstaller. No Python needed on the target machine.
 
 ## Architecture
 
