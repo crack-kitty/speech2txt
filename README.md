@@ -1,5 +1,7 @@
 # Speech2Txt
 
+[![Tests](https://github.com/crack-kitty/speech2txt/actions/workflows/tests.yml/badge.svg)](https://github.com/crack-kitty/speech2txt/actions/workflows/tests.yml)
+
 A local, system-wide dictation app for Windows 11. Press a hotkey, speak, and transcribed text appears at the cursor in any application — Notepad++, VS Code, Claude Code, browsers, Discord, etc.
 
 Uses [faster-whisper](https://github.com/SYSTRAN/faster-whisper) for fully offline speech-to-text. No cloud, no API keys, no subscription.
