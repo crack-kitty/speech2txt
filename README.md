@@ -152,4 +152,4 @@ Hotkey (pynput) → Record (sounddevice) → Transcribe (faster-whisper) → Com
 
 ## License
 
-Private — not currently licensed for distribution.
+[MIT](LICENSE)
