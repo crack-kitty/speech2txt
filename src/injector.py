@@ -1,41 +1,28 @@
-"""Text injection into the active window via clipboard paste."""
+"""Text injection into the active window via pynput keyboard typing."""
 
 import time
 
 import pyautogui
-import pyperclip
+from pynput.keyboard import Controller
 
 
 # Disable pyautogui's fail-safe (moving mouse to corner aborts)
 # since this runs as a background service
 pyautogui.FAILSAFE = False
 
+_keyboard = Controller()
 
-def inject_text(text: str, paste_delay: float = 0.06) -> None:
-    """Paste text into the currently focused application via Ctrl+V.
 
-    Saves the clipboard, sets it to our text, simulates Ctrl+V,
-    waits, then restores the original clipboard.
+def inject_text(text: str) -> None:
+    """Type text into the currently focused application.
+
+    Uses pynput's keyboard controller to type Unicode text directly.
+    Bypasses the clipboard entirely.
     """
     if not text:
         return
 
-    old_clipboard = ""
-    try:
-        old_clipboard = pyperclip.paste()
-    except Exception:
-        pass  # Clipboard might be empty or contain non-text
-
-    pyperclip.copy(text)
-    time.sleep(0.02)  # Let clipboard settle before pasting
-    pyautogui.hotkey("ctrl", "v")
-    time.sleep(paste_delay)
-
-    # Restore original clipboard
-    try:
-        pyperclip.copy(old_clipboard)
-    except Exception:
-        pass
+    _keyboard.type(text)
 
 
 def send_key(key: str) -> None:

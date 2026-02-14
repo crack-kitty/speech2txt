@@ -10,5 +10,6 @@ build/
 .env
 .claude/
 installer/
+inject_debug.log
 testing.md
 nul

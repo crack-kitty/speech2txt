@@ -9,7 +9,7 @@ Press **Ctrl+Shift+V** once to:
 2. Activate your speech-to-text app (by holding down Ctrl+Alt+Space)
 
 Press **Ctrl+Shift+V** again to:
-1. Release the speech-to-text trigger (releases Ctrl+Alt+Space, which tells the app to convert your audio to text)
+1. Release the held keys and send a clean Ctrl+Alt+Space to trigger the speech-to-text conversion/paste
 2. Re-mute Discord
 
 ## Requirements
@@ -46,15 +46,15 @@ Create a new file called `Discord Mute to Voice Command.ahk` and paste in the fo
 ```ahk
 voiceMode := false
 
-^+v::
+*^+v::
 {
     global voiceMode
 
-    KeyWait "Ctrl"
-    KeyWait "Shift"
-
     if (!voiceMode)
     {
+        KeyWait "Ctrl"
+        KeyWait "Shift"
+        
         voiceMode := true
         Send "^+{F9}"                            ; Unmute Discord
         Sleep 200
@@ -63,12 +63,19 @@ voiceMode := false
     else
     {
         voiceMode := false
-        Send "{Space up}{Alt up}{Ctrl up}"        ; Release Ctrl+Alt+Space (stop voice input)
-        Sleep 200
+        Send "{Ctrl up}{Alt up}{Space up}"        ; Release ALL virtual keys
+        Sleep 500
+        Send "^!{Space}"                          ; Clean tap of Ctrl+Alt+Space to trigger paste
+        Sleep 500
         Send "^+{F9}"                             ; Mute Discord
     }
 }
 ```
+
+**Note about the script:**
+- The `*` before `^+v` is a wildcard that tells AHK to fire the hotkey even if extra modifier keys are virtually held down (which they are during dictation).
+- The `KeyWait` lines only run on the start path, ensuring your physical keys are released before sending new combos.
+- On the exit path, it first releases all virtual keys, then sends a clean Ctrl+Alt+Space tap to trigger the paste, then mutes Discord.
 
 ### Step 4: Run the Script
 
@@ -85,7 +92,7 @@ voiceMode := false
 
 ## Customization
 
-**Change the trigger hotkey:** Replace `^+v` at the top of the script with a different combo. AHK uses these symbols for modifier keys:
+**Change the trigger hotkey:** Replace `*^+v` at the top of the script with a different combo. The `*` is a wildcard — keep it. AHK uses these symbols for modifier keys:
 
 | Symbol | Key |
 |--------|-----|
@@ -98,7 +105,7 @@ For example, `^!F10` would be Ctrl+Alt+F10.
 
 **Change the Discord mute keybind:** If you used something other than Ctrl+Shift+F9 in Discord, update the two `Send "^+{F9}"` lines to match.
 
-**Change the voice app trigger:** If your speech-to-text app uses a different key combination, update the `Send "{Ctrl down}{Alt down}{Space down}"` and `Send "{Space up}{Alt up}{Ctrl up}"` lines accordingly.
+**Change the voice app trigger:** If your speech-to-text app uses a different key combination, update the `Send "{Ctrl down}{Alt down}{Space down}"` line (start) and the `Send "^!{Space}"` line (stop/paste) accordingly.
 
 ## Managing the Script
 
