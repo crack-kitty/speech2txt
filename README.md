@@ -144,6 +144,10 @@ Hotkey (pynput) → Record (sounddevice) → Transcribe (faster-whisper) → Com
 - `src/injector.py` — Clipboard paste text injection
 - `src/settings_ui.py` — tkinter settings window
 
+## Extras
+
+- [Discord Mute + Voice Command Toggle](Discord%20Mute%20to%20Voice%20Command%20-%20README.md) — AutoHotKey script that unmutes Discord, dictates, and re-mutes with a single hotkey
+
 ## License
 
 Private — not currently licensed for distribution.
