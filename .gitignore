@@ -5,8 +5,10 @@ __pycache__/
 dist/
 build/
 *.spec
+!speech2txt.spec
 *.egg-info/
 .env
 .claude/
+installer/
 testing.md
 nul

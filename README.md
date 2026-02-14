@@ -116,6 +116,16 @@ build.bat
 
 The executable will be at `dist\Speech2Txt.exe`. The Whisper model downloads on first run (not bundled).
 
+### Windows Installer
+
+Build a proper Windows installer (`.exe`) with desktop shortcut, Start Menu entry, and uninstaller:
+
+```bash
+build_installer.bat
+```
+
+Requires [Inno Setup](https://jrsoftware.org/isdl.php) (`choco install innosetup -y`). The installer will be at `installer\Speech2Txt-Setup.exe`.
+
 ## Architecture
 
 Threading-based design with the main thread running the pystray event loop:
