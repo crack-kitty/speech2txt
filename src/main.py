@@ -160,6 +160,10 @@ class Speech2Txt:
         # Lowercase short all-caps words: "DIR" -> "dir", "PING" -> "ping"
         text = self._ALLCAPS_RE.sub(self._lowercase_short_caps, text)
 
+        # Clean Whisper punctuation artifacts: ",." -> "," / "?." -> "?" / ".." -> "."
+        text = re.sub(r'([,?!;:])\.+', r'\1', text)  # period after other punctuation
+        text = re.sub(r'(?<!\.)\.{2}(?!\.)', '.', text)  # double period (but not ellipsis ...)
+
         # Ensure first character is capitalized
         if text and text[0].islower():
             text = text[0].upper() + text[1:]

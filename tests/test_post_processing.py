@@ -81,6 +81,42 @@ class TestCapitalization:
         assert result == ""
 
 
+class TestWhisperArtifactCleanup:
+    """Test cleanup of Whisper punctuation artifacts."""
+
+    def test_comma_dot(self, app):
+        result = app._post_process("Hello,. world")
+        assert result == "Hello, world"
+
+    def test_comma_double_dot(self, app):
+        result = app._post_process("Hello,.. world")
+        assert result == "Hello, world"
+
+    def test_question_dot(self, app):
+        result = app._post_process("Really?. Yes")
+        assert result == "Really? Yes"
+
+    def test_exclamation_dot(self, app):
+        result = app._post_process("Wow!. Cool")
+        assert result == "Wow! Cool"
+
+    def test_double_period(self, app):
+        result = app._post_process("Hello.. world")
+        assert result == "Hello. world"
+
+    def test_ellipsis_preserved(self, app):
+        result = app._post_process("Hello... world")
+        assert "..." in result
+
+    def test_single_period_preserved(self, app):
+        result = app._post_process("Hello. World")
+        assert result == "Hello. World"
+
+    def test_single_comma_preserved(self, app):
+        result = app._post_process("Hello, world")
+        assert result == "Hello, world"
+
+
 class TestRawMode:
     """Test that raw formatting mode skips all processing."""
 
