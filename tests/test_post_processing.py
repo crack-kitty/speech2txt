@@ -116,6 +116,18 @@ class TestWhisperArtifactCleanup:
         result = app._post_process("Hello, world")
         assert result == "Hello, world"
 
+    def test_period_before_comma(self, app):
+        result = app._post_process("What it is., really")
+        assert result == "What it is, really"
+
+    def test_period_before_question(self, app):
+        result = app._post_process("is that right.?")
+        assert result == "Is that right?"
+
+    def test_period_before_exclamation(self, app):
+        result = app._post_process("wow.!")
+        assert result == "Wow!"
+
 
 class TestRawMode:
     """Test that raw formatting mode skips all processing."""
