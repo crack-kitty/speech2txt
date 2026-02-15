@@ -52,9 +52,9 @@ install.bat
 Or manually:
 
 ```bash
-python -m venv venv
-venv\Scripts\activate
-pip install -r requirements.txt
+pip install uv
+uv venv venv --python 3.14
+uv pip install -r requirements.txt --python venv\Scripts\python.exe
 ```
 
 ## Usage
@@ -112,7 +112,7 @@ If you've forked the repo or made changes, you can build your own installer.
 ### Standalone .exe only
 
 ```bash
-pip install pyinstaller
+uv pip install pyinstaller --python venv\Scripts\python.exe
 build.bat
 ```
 

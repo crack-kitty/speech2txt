@@ -26,8 +26,8 @@ Use threading.Event for signaling, queue.Queue for data passing.
 - Keep functions under 30 lines where possible
 
 ## Build & Run
-- python -m venv venv && venv\Scripts\activate
-- pip install -r requirements.txt
+- uv venv venv --python 3.14
+- uv pip install -r requirements.txt --python venv/Scripts/python.exe
 - python src/main.py
 - PyInstaller: pyinstaller --onefile --noconsole src/main.py
 

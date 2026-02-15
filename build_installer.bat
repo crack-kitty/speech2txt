@@ -7,7 +7,7 @@ echo.
 :: Step 1: Build the exe with PyInstaller
 echo [1/2] Building Speech2Txt.exe with PyInstaller...
 call venv\Scripts\activate
-pip install pyinstaller
+uv pip install pyinstaller --python venv\Scripts\python.exe
 pyinstaller speech2txt.spec
 if errorlevel 1 (
     echo ERROR: PyInstaller build failed!

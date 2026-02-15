@@ -16,11 +16,18 @@ if %errorlevel% neq 0 (
 for /f "tokens=*" %%i in ('python --version 2^>^&1') do set PYVER=%%i
 echo Found %PYVER%
 
+:: Install uv if not available
+where uv >nul 2>&1
+if %errorlevel% neq 0 (
+    echo Installing uv...
+    pip install uv
+)
+
 :: Create venv if it doesn't exist
 if not exist "venv\Scripts\python.exe" (
     echo.
     echo Creating virtual environment...
-    python -m venv venv
+    uv venv venv --python 3.14
     if %errorlevel% neq 0 (
         echo ERROR: Failed to create virtual environment.
         pause
@@ -31,7 +38,7 @@ if not exist "venv\Scripts\python.exe" (
 :: Install dependencies
 echo.
 echo Installing dependencies...
-venv\Scripts\pip.exe install -r requirements.txt
+uv pip install -r requirements.txt --python venv\Scripts\python.exe
 if %errorlevel% neq 0 (
     echo ERROR: Failed to install dependencies.
     pause
