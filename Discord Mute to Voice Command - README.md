@@ -6,10 +6,10 @@ A simple AutoHotKey script that lets you unmute Discord, dictate via a speech-to
 
 Press **Ctrl+Shift+V** once to:
 1. Unmute Discord
-2. Activate your speech-to-text app (by holding down Ctrl+Alt+Space)
+2. Send a clean Ctrl+Alt+Space tap to toggle recording ON
 
 Press **Ctrl+Shift+V** again to:
-1. Release the held keys and send a clean Ctrl+Alt+Space to trigger the speech-to-text conversion/paste
+1. Send a clean Ctrl+Alt+Space tap to toggle recording OFF (triggers transcription/paste)
 2. Re-mute Discord
 
 ## Requirements
@@ -17,7 +17,7 @@ Press **Ctrl+Shift+V** again to:
 - **Windows** (AutoHotKey is Windows-only)
 - **AutoHotKey v2.0** — download from [https://www.autohotkey.com](https://www.autohotkey.com)
 - **Discord** (desktop app)
-- A **speech-to-text application** that activates while Ctrl+Alt+Space is held down (e.g., Speech2Txt or similar Whisper-based tools)
+- A **speech-to-text application** in toggle mode that uses Ctrl+Alt+Space (e.g., Speech2Txt or similar Whisper-based tools)
 
 ## Setup
 
@@ -54,28 +54,31 @@ voiceMode := false
     {
         KeyWait "Ctrl"
         KeyWait "Shift"
-        
+        KeyWait "v"
+
         voiceMode := true
-        Send "^+{F9}"                            ; Unmute Discord
+        Send "^+{F9}"              ; Unmute Discord
         Sleep 200
-        Send "{Ctrl down}{Alt down}{Space down}"  ; Hold Ctrl+Alt+Space (start voice input)
+        Send "^!{Space}"           ; Clean tap — toggles recording ON
     }
     else
     {
+        KeyWait "Ctrl"
+        KeyWait "Shift"
+        KeyWait "v"
+
         voiceMode := false
-        Send "{Ctrl up}{Alt up}{Space up}"        ; Release ALL virtual keys
+        Send "^!{Space}"           ; Clean tap — toggles recording OFF
         Sleep 500
-        Send "^!{Space}"                          ; Clean tap of Ctrl+Alt+Space to trigger paste
-        Sleep 500
-        Send "^+{F9}"                             ; Mute Discord
+        Send "^+{F9}"             ; Mute Discord
     }
 }
 ```
 
 **Note about the script:**
-- The `*` before `^+v` is a wildcard that tells AHK to fire the hotkey even if extra modifier keys are virtually held down (which they are during dictation).
-- The `KeyWait` lines only run on the start path, ensuring your physical keys are released before sending new combos.
-- On the exit path, it first releases all virtual keys, then sends a clean Ctrl+Alt+Space tap to trigger the paste, then mutes Discord.
+- The `*` before `^+v` is a wildcard that tells AHK to fire the hotkey even if extra modifier keys happen to be held.
+- `KeyWait` lines on both paths ensure your physical Ctrl, Shift, and V keys are fully released before sending any key combos, preventing conflicts.
+- No modifier keys are held down during recording — you can freely alt-tab and interact with other windows while dictating.
 
 ### Step 4: Run the Script
 
@@ -105,7 +108,7 @@ For example, `^!F10` would be Ctrl+Alt+F10.
 
 **Change the Discord mute keybind:** If you used something other than Ctrl+Shift+F9 in Discord, update the two `Send "^+{F9}"` lines to match.
 
-**Change the voice app trigger:** If your speech-to-text app uses a different key combination, update the `Send "{Ctrl down}{Alt down}{Space down}"` line (start) and the `Send "^!{Space}"` line (stop/paste) accordingly.
+**Change the voice app trigger:** If your speech-to-text app uses a different key combination, update both `Send "^!{Space}"` lines accordingly.
 
 ## Managing the Script
 
@@ -119,6 +122,6 @@ For example, `^!F10` would be Ctrl+Alt+F10.
 
 **Voice app doesn't trigger:** Some speech-to-text apps detect simulated key presses differently than real ones. If this happens, you may need to check your specific app's documentation for compatibility with AutoHotKey.
 
-**Keys seem "stuck" after running:** If the script gets interrupted mid-sequence, modifier keys can get stuck in a pressed state. Just physically tap Ctrl, Alt, and Space once each to release them.
+**Keys seem "stuck" after running:** This was a known issue with older versions of the script that held modifier keys during recording. The current version uses clean taps instead, so this should no longer occur. If it does happen, just physically tap Ctrl, Alt, and Space once each to release them.
 
 **Syntax errors when double-clicking:** You probably installed AutoHotKey v1 instead of v2. Either reinstall with v2, or let someone know and the script can be rewritten for v1 syntax.
