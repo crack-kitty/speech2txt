@@ -1,5 +1,6 @@
 """Text injection into the active window via pynput keyboard typing."""
 
+import ctypes
 import time
 
 import pyautogui
@@ -11,6 +12,41 @@ from pynput.keyboard import Controller
 pyautogui.FAILSAFE = False
 
 _keyboard = Controller()
+_user32 = ctypes.windll.user32
+
+
+def get_foreground_window() -> int:
+    """Get the handle of the currently focused window."""
+    return _user32.GetForegroundWindow()
+
+
+def restore_focus(hwnd: int) -> bool:
+    """Bring a window back to the foreground. Returns True on success."""
+    if not hwnd or not _user32.IsWindow(hwnd):
+        return False
+    if _user32.GetForegroundWindow() == hwnd:
+        return True
+
+    # Attach our thread's input to the foreground window's thread.
+    # This lifts the SetForegroundWindow restriction without injecting
+    # any phantom keystrokes into the input stream.
+    kernel32 = ctypes.windll.kernel32
+    our_thread = kernel32.GetCurrentThreadId()
+    fg_thread = _user32.GetWindowThreadProcessId(
+        _user32.GetForegroundWindow(), None
+    )
+
+    attached = False
+    if our_thread != fg_thread:
+        attached = bool(_user32.AttachThreadInput(our_thread, fg_thread, True))
+
+    _user32.SetForegroundWindow(hwnd)
+
+    if attached:
+        _user32.AttachThreadInput(our_thread, fg_thread, False)
+
+    time.sleep(0.05)
+    return _user32.GetForegroundWindow() == hwnd
 
 
 def inject_text(text: str) -> None:

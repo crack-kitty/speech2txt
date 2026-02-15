@@ -15,6 +15,7 @@ from recorder import AudioRecorder
 from transcriber import Transcriber
 from commands import VoiceCommandProcessor
 from hotkey import HotkeyListener
+from injector import get_foreground_window, restore_focus
 from tray import TrayApp
 
 
@@ -106,19 +107,24 @@ class Speech2Txt:
         """Stop recording and run transcription in a background thread."""
         self._recording = False
         audio_data = self.recorder.stop()
+        target_hwnd = get_foreground_window()
         self.tray.set_state("processing")
         self._play_sound(600, 100)  # Low beep — stop
 
         threading.Thread(
             target=self._transcribe_and_inject,
-            args=(audio_data,),
+            args=(audio_data, target_hwnd),
             daemon=True,
         ).start()
 
-    def _transcribe_and_inject(self, audio_data) -> None:
+    def _transcribe_and_inject(self, audio_data, target_hwnd: int) -> None:
         """Transcribe audio and inject the result."""
         text = self.transcriber.transcribe(audio_data)
         if text:
+            # Restore focus to the window that was active when recording stopped,
+            # in case the user alt-tabbed during transcription.
+            if not restore_focus(target_hwnd):
+                print("Warning: could not restore focus to target window")
             result = self._post_process(text)
             control = self.commands.process(result)
             if control == "stop":

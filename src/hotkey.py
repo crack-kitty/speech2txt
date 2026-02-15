@@ -1,11 +1,21 @@
 """Global hotkey detection using pynput."""
 
+import ctypes
 import threading
 from typing import Callable, Optional
 
 from pynput import keyboard
 
 from config import AppConfig
+
+# Virtual key codes for verifying actual key state via GetAsyncKeyState
+_VK_MAP = {
+    "ctrl": 0x11,   # VK_CONTROL
+    "alt": 0x12,    # VK_MENU
+    "shift": 0x10,  # VK_SHIFT
+    "space": 0x20,  # VK_SPACE
+    "cmd": 0x5B,    # VK_LWIN
+}
 
 
 class HotkeyListener:
@@ -60,12 +70,29 @@ class HotkeyListener:
                 return str(key.vk)
         return None
 
+    def _prune_stale_keys(self) -> None:
+        """Remove keys from _pressed_keys that aren't actually held down.
+
+        Alt-tabbing can cause pynput to miss key release events, leaving
+        stale entries that prevent the hotkey from firing on the next press.
+        We verify against the actual keyboard state via GetAsyncKeyState.
+        """
+        stale = set()
+        for key_name in self._pressed_keys:
+            vk = _VK_MAP.get(key_name)
+            if vk is not None:
+                if not (ctypes.windll.user32.GetAsyncKeyState(vk) & 0x8000):
+                    stale.add(key_name)
+        if stale:
+            self._pressed_keys -= stale
+
     def _handle_press(self, key: keyboard.Key | keyboard.KeyCode) -> None:
         name = self._key_to_str(key)
         if name is None:
             return
 
         with self._lock:
+            self._prune_stale_keys()
             self._pressed_keys.add(name)
             if self._pressed_keys >= self.config.hotkey:
                 if self.config.recording_mode == "push_to_talk":
