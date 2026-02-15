@@ -1,5 +1,6 @@
 """Settings window using tkinter."""
 
+import os
 import tkinter as tk
 from tkinter import ttk
 from typing import Callable, Optional
@@ -8,7 +9,20 @@ import sounddevice as sd
 
 from config import AppConfig
 
-VERSION = "1.0.0"
+
+def _read_version() -> str:
+    """Read version from VERSION file."""
+    version_file = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "VERSION"
+    )
+    try:
+        with open(version_file) as f:
+            return f.read().strip()
+    except OSError:
+        return "unknown"
+
+
+VERSION = _read_version()
 
 WHISPER_MODELS = ["tiny.en", "base.en", "small.en", "medium.en"]
 RECORDING_MODES = ["toggle", "push_to_talk"]
@@ -22,7 +36,7 @@ def open_settings_window(
     """Open a tkinter settings dialog. Blocks until closed."""
     root = tk.Tk()
     root.title("Speech2Txt Settings")
-    root.geometry("450x500")
+    root.geometry("550x500")
     root.resizable(False, False)
 
     # Make it look a bit nicer on Windows
@@ -79,7 +93,7 @@ def open_settings_window(
         idx = devices.index(config.audio_device) + 1
         device_var.set(device_names[idx])
     device_combo = ttk.Combobox(
-        frame, textvariable=device_var, values=device_names, state="readonly", width=27
+        frame, textvariable=device_var, values=device_names, state="readonly", width=45
     )
     device_combo.grid(row=row, column=1, sticky="w", pady=5)
     row += 1

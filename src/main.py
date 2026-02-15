@@ -32,6 +32,7 @@ class Speech2Txt:
 
         self._recording = False
         self._lock = threading.Lock()
+        self._settings_open = False
 
         self.hotkey = HotkeyListener(
             config=self.config,
@@ -187,14 +188,20 @@ class Speech2Txt:
             ).start()
 
     def _open_settings(self) -> None:
-        """Open the settings window."""
+        """Open the settings window (only one at a time)."""
+        if self._settings_open:
+            return
+        self._settings_open = True
         # Import here to avoid circular import and tkinter overhead at startup
         from settings_ui import open_settings_window
-        threading.Thread(
-            target=open_settings_window,
-            args=(self.config, self._on_settings_changed),
-            daemon=True,
-        ).start()
+
+        def _run_settings() -> None:
+            try:
+                open_settings_window(self.config, self._on_settings_changed)
+            finally:
+                self._settings_open = False
+
+        threading.Thread(target=_run_settings, daemon=True).start()
 
     def _on_settings_changed(self) -> None:
         """Called when settings are saved from the UI."""
