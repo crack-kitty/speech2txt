@@ -1,6 +1,6 @@
 [Setup]
 AppName=Speech2Txt
-AppVersion=1.1.0
+AppVersion=1.1.1
 AppPublisher=Speech2Txt
 DefaultDirName={autopf}\Speech2Txt
 DefaultGroupName=Speech2Txt

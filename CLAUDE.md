@@ -39,3 +39,9 @@ Use threading.Event for signaling, queue.Queue for data passing.
 
 ## Git
 - Do NOT add Co-Authored-By lines to commits
+- Every commit bumps the version (semantic versioning in `VERSION` file):
+  - Default: bump PATCH (1.1.0 → 1.1.1)
+  - User says "minor": bump MINOR (1.1.0 → 1.2.0)
+  - User says "major": bump MAJOR (1.1.0 → 2.0.0)
+- On every commit: update `VERSION`, update `AppVersion` in `installer.iss`, create git tag `v{VERSION}`
+- After pushing, ASK the user if they want to rebuild the installer and create a GitHub release
