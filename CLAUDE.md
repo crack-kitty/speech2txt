@@ -33,7 +33,7 @@ Use threading.Event for signaling, queue.Queue for data passing.
 
 ## Installer
 - Pre-built installer: `installer/Speech2Txt-Setup.exe` (built with PyInstaller + Inno Setup)
-- Do NOT auto-rebuild the installer on every push
+- Do NOT auto-rebuild the installer on every push, ASK.
 - At the end of a work session, if source code was changed, ASK the user if they want to rebuild the installer before wrapping up
 - Build command: `build_installer.bat` (requires Inno Setup installed)
 
