@@ -1,10 +1,11 @@
 """Speech-to-text transcription using faster-whisper."""
 
-import io
 import os
 import threading
 import time
 from typing import Optional
+
+import numpy as np
 
 from faster_whisper import WhisperModel
 
@@ -43,21 +44,20 @@ class Transcriber:
         """Block until the model is loaded."""
         return self._ready.wait(timeout=timeout)
 
-    def transcribe(self, wav_bytes: bytes) -> str:
-        """Transcribe WAV audio bytes and return the text."""
+    def transcribe(self, audio: np.ndarray) -> str:
+        """Transcribe a float32 numpy audio array and return the text."""
         if not self._ready.is_set() or self._model is None:
             print("Model not ready yet")
             return ""
 
-        if not wav_bytes:
+        if len(audio) == 0:
             return ""
 
         t0 = time.perf_counter()
         segments, info = self._model.transcribe(
-            io.BytesIO(wav_bytes),
+            audio.flatten(),
             language="en",
-            initial_prompt="Hello, welcome.",
-            vad_filter=True,
+            vad_filter=False,
         )
 
         text_parts: list[str] = []

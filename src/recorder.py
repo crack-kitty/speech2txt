@@ -1,8 +1,6 @@
 """Audio recording using sounddevice."""
 
-import io
 import threading
-import wave
 from typing import Optional
 
 import numpy as np
@@ -33,8 +31,8 @@ class AudioRecorder:
             )
             self._stream.start()
 
-    def stop(self) -> bytes:
-        """Stop recording and return WAV data as bytes."""
+    def stop(self) -> np.ndarray:
+        """Stop recording and return audio as a float32 numpy array."""
         with self._lock:
             if self._stream is not None:
                 self._stream.stop()
@@ -42,13 +40,13 @@ class AudioRecorder:
                 self._stream = None
 
         if not self._frames:
-            return b""
+            return np.array([], dtype=np.float32)
 
         audio = np.concatenate(self._frames, axis=0)
         duration = len(audio) / self.config.sample_rate
         print(f"Recorded {duration:.1f}s of audio")
 
-        return self._to_wav_bytes(audio)
+        return audio
 
     def _audio_callback(
         self,
@@ -61,18 +59,6 @@ class AudioRecorder:
         if status:
             print(f"Audio status: {status}")
         self._frames.append(indata.copy())
-
-    def _to_wav_bytes(self, audio: np.ndarray) -> bytes:
-        """Convert float32 numpy array to WAV bytes."""
-        # Convert float32 [-1, 1] to int16
-        int16_audio = (audio * 32767).astype(np.int16)
-        buf = io.BytesIO()
-        with wave.open(buf, "wb") as wf:
-            wf.setnchannels(self.config.channels)
-            wf.setsampwidth(2)  # 16-bit
-            wf.setframerate(self.config.sample_rate)
-            wf.writeframes(int16_audio.tobytes())
-        return buf.getvalue()
 
     @staticmethod
     def list_devices() -> list[dict]:

@@ -105,19 +105,19 @@ class Speech2Txt:
     def _stop_and_transcribe(self) -> None:
         """Stop recording and run transcription in a background thread."""
         self._recording = False
-        wav_data = self.recorder.stop()
+        audio_data = self.recorder.stop()
         self.tray.set_state("processing")
         self._play_sound(600, 100)  # Low beep — stop
 
         threading.Thread(
             target=self._transcribe_and_inject,
-            args=(wav_data,),
+            args=(audio_data,),
             daemon=True,
         ).start()
 
-    def _transcribe_and_inject(self, wav_data: bytes) -> None:
+    def _transcribe_and_inject(self, audio_data) -> None:
         """Transcribe audio and inject the result."""
-        text = self.transcriber.transcribe(wav_data)
+        text = self.transcriber.transcribe(audio_data)
         if text:
             result = self._post_process(text)
             control = self.commands.process(result)
