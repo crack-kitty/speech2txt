@@ -9,7 +9,8 @@ build/
 !speech2txt.spec
 *.egg-info/
 .env
-.claude/
+.claude/*
+!.claude/commands/
 installer/
 inject_debug.log
 projectplan.md
