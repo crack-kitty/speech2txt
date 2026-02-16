@@ -16,3 +16,4 @@ inject_debug.log
 projectplan.md
 testing.md
 nul
+*.code-workspace
