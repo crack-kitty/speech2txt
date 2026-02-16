@@ -18,21 +18,17 @@ Commit changes with automatic semantic version bump.
 
 6. Stage the updated `VERSION` file.
 
-7. Update `installer.iss` — set `AppVersion` to the new version number. Stage it.
-
-8. Draft a concise commit message summarizing the changes. Format:
+7. Draft a concise commit message summarizing the changes. Format:
    ```
    v{NEW_VERSION}: {summary of changes}
    ```
    The summary should be 1-2 sentences describing what changed and why.
 
-9. Create the commit. Do NOT include Co-Authored-By lines.
+8. Create the commit. Do NOT include Co-Authored-By lines.
 
-10. Create a git tag `v{NEW_VERSION}` on the new commit.
+9. Create a git tag `v{NEW_VERSION}` on the new commit.
 
-11. Show the user: old version → new version, the commit message, and remind them to `git push --tags` when ready.
-
-12. Ask the user if they want to rebuild the installer (`build_installer.bat`). If yes, run it and upload to a new GitHub release.
+10. Show the user: old version → new version, the commit message, and remind them to `git push --tags` when ready.
 
 ## Rules
 - Do NOT push automatically — let the user decide when to push
